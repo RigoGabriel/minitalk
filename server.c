@@ -6,7 +6,7 @@
 /*   By: grigo <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/16 13:59:09 by grigo             #+#    #+#             */
-/*   Updated: 2021/06/17 14:54:58 by grigo            ###   ########.fr       */
+/*   Updated: 2021/06/17 15:04:20 by grigo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 #include <unistd.h>
 #include <signal.h>
 
-static void receive(int sig, siginfo_t *sig_info, void *ok)
+static void	receive(int sig, siginfo_t *sig_info, void *ok)
 {
-	static char c = 0;
-	static int i = 0;
-	static pid_t pid_c = 0;
+	static char			c = 0;
+	static int			i = 0;
+	static pid_t		pid_c = 0;
 
 	if (sig == SIGUSR1)
 		c += 1 << i;
@@ -38,18 +38,19 @@ static void receive(int sig, siginfo_t *sig_info, void *ok)
 	}
 }
 
-int main()
+int	main(void)
 {
-	pid_t pid;
-	struct sigaction catch; 
+	pid_t				pid;
+	struct sigaction	catch;
 
 	pid = getpid();
 	printf("pid = %d\n", pid);
-
 	catch.sa_flags = SA_SIGINFO;
 	catch.sa_sigaction = receive;
 	sigaction(SIGUSR1, &catch, 0);
 	sigaction(SIGUSR2, &catch, 0);
-	while(1){}
+	while (1)
+	{
+	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: grigo <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/16 14:13:32 by grigo             #+#    #+#             */
-/*   Updated: 2021/06/17 14:54:51 by grigo            ###   ########.fr       */
+/*   Updated: 2021/06/17 15:01:55 by grigo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <unistd.h>
 #include <stdio.h>
 
-static long long		ft_atoi(const char *str)
+static long long	ft_atoi(const char *str)
 {
 	unsigned long long	result;
 	int					i;
@@ -42,9 +42,9 @@ static long long		ft_atoi(const char *str)
 	return (result * value);
 }
 
-static void send_char(pid_t pid, int c)
+static void	send_char(pid_t pid, int c)
 {
-	int i;
+	int					i;
 
 	i = 0;
 	while (i < 8)
@@ -59,9 +59,9 @@ static void send_char(pid_t pid, int c)
 	}
 }
 
-static void send_message(pid_t pid, char* message)
+static void	send_message(pid_t pid, char *message)
 {
-	int i;
+	int					i;
 
 	i = 0;
 	while (message[i])
@@ -72,7 +72,7 @@ static void send_message(pid_t pid, char* message)
 	send_char(pid, message[i]);
 }
 
-static void received(int sig, siginfo_t *sig_info, void *ok)
+static void	received(int sig, siginfo_t *sig_info, void *ok)
 {
 	(void)sig;
 	(void)sig_info;
@@ -80,9 +80,9 @@ static void received(int sig, siginfo_t *sig_info, void *ok)
 	write(1, "signal receveid\n", 16);
 }
 
-int main(int ac, char *av[])
+int	main(int ac, char *av[])
 {
-	struct sigaction catch;
+	struct sigaction	catch;
 
 	catch.sa_flags = SA_SIGINFO;
 	catch.sa_sigaction = received;
@@ -97,4 +97,3 @@ int main(int ac, char *av[])
 	pause();
 	return (0);
 }
-
