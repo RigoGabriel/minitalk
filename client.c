@@ -6,7 +6,7 @@
 /*   By: grigo <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/16 14:13:32 by grigo             #+#    #+#             */
-/*   Updated: 2021/06/16 14:58:42 by grigo            ###   ########.fr       */
+/*   Updated: 2021/06/17 14:54:51 by grigo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,14 @@ static void send_char(pid_t pid, int c)
 	i = 0;
 	while (i < 8)
 	{
-		usleep(200);
-		if (c & 0b00000001)
+		usleep(100);
+		if (c & 1)
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
 		c = c >> 1;
 		i++;
 	}
-	write(1, "\n", 1);
 }
 
 static void send_message(pid_t pid, char* message)
@@ -73,14 +72,29 @@ static void send_message(pid_t pid, char* message)
 	send_char(pid, message[i]);
 }
 
+static void received(int sig, siginfo_t *sig_info, void *ok)
+{
+	(void)sig;
+	(void)sig_info;
+	(void)ok;
+	write(1, "signal receveid\n", 16);
+}
+
 int main(int ac, char *av[])
 {
+	struct sigaction catch;
+
+	catch.sa_flags = SA_SIGINFO;
+	catch.sa_sigaction = received;
+	sigaction(SIGUSR2, &catch, 0);
 	if (ac != 3)
-		write(2, "Usage: ./client pid(server) message\n", 36);
-	else
 	{
-		send_message(ft_atoi(av[1]), av[2]);
+		write(2, "Usage: ./client pid(server) message\n", 36);
+		return (0);
 	}
+	else
+		send_message(ft_atoi(av[1]), av[2]);
+	pause();
 	return (0);
 }
 
