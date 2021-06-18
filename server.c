@@ -18,8 +18,8 @@ static void	receive(int sig, siginfo_t *sig_info, void *ok)
 {
 	static char			c = 0;
 	static int			i = 0;
-	static pid_t		pid_c = 0;
 
+	(void)ok;
 	if (sig == SIGUSR1)
 		c += 1 << i;
 	i++;
