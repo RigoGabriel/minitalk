@@ -6,7 +6,7 @@
 /*   By: grigo <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/16 14:13:32 by grigo             #+#    #+#             */
-/*   Updated: 2021/06/17 15:01:55 by grigo            ###   ########.fr       */
+/*   Updated: 2021/06/21 11:03:51 by grigo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,17 +59,20 @@ static void	send_char(pid_t pid, int c)
 	}
 }
 
-static void	send_message(pid_t pid, char *message)
+static int	send_message(pid_t pid, char *message)
 {
 	int					i;
 
 	i = 0;
+	if (pid == 0)
+		return (-1);
 	while (message[i])
 	{
 		send_char(pid, message[i]);
 		i++;
 	}
 	send_char(pid, message[i]);
+	return (0);
 }
 
 static void	received(int sig, siginfo_t *sig_info, void *ok)
@@ -93,7 +96,13 @@ int	main(int ac, char *av[])
 		return (0);
 	}
 	else
-		send_message(ft_atoi(av[1]), av[2]);
+	{
+		if (send_message(ft_atoi(av[1]), av[2]) == -1)
+		{
+			write(2, "Error: invalid pid\n", 19);
+			return (0);
+		}
+	}
 	pause();
 	return (0);
 }
